@@ -2,7 +2,7 @@
 cd /
 for i in /var/lib/pacman/local/*/files;do
     sed -n '/^%BACKUP%$/{:x;n;/^$/q;s!^!/!;p;bx}' "$i" | \
-	while read fn omd5;do
+	while read -d $'\t' fn && read omd5;do
 	    set -- `md5sum "$fn"`
 	    if [[ "$1" != "$omd5" ]];then
 		echo "$fn"
