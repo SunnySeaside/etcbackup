@@ -2,12 +2,13 @@
 This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([Github](https://github.com/borgbackup/borg/)) backup utility. Unlike many other Borg wrappers, it allows you to use external scripts to generate a list of files or some raw data to be backed up. It also allows backing up different kinds of data to their corresponding repositories.
 
 # Quick start #
-1. Create some borg repos
+1. Create some Borg repositories
 
-    cd ~/backup
-	mkdir sysconf packages
-	borg -e repokey sysconf
-	borg -e repokey packages
+```cd ~/backup
+mkdir sysconf packages
+borg -e repokey sysconf
+borg -e repokey packages
+```
 
 2. Edit config file
 
