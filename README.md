@@ -16,13 +16,6 @@ borg -e repokey packages
    
 3. Run `etcbackup ~/backup`
 
-# TODO list #
-* Read configuration from /etc or user home directory
-* Using xargs is subject to command line length limitations
-It'd be better if [`--files-from`](https://github.com/borgbackup/borg/issues/841) is implemented in Borg. Or we could use `--patterns-from`, which is an experimental feature.
-* Support for excluding files
-* Make it easier to create repositories and restore from backups
-
 # Similar projects #
 Please see https://github.com/borgbackup/community#user-content-backup-scripts--borg-wrappers
 
