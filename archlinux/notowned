@@ -1,4 +1,9 @@
 #!/bin/bash
+shopt -s lastpipe
+declare -A owned
+pacman -Qlq | grep '^/etc' | while read file;do
+    owned["$file"]=1
+done
 find /etc -wholename /etc/ca-certificates/extracted -prune -or -type f -and -not -name '*~' -print0 | while read -d '' file;do
-    pacman -Qqo "$file" > /dev/null 2>&1 || echo "$file"
+    [[ -z ${owned["$file"]} ]] && echo "$file"
 done
