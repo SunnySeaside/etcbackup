@@ -2,12 +2,13 @@
 This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([Github](https://github.com/borgbackup/borg/)) backup utility. Unlike many other Borg wrappers, it allows you to use external scripts to generate a list of files or some raw data to be backed up. It also allows backing up different kinds of data to their corresponding repositories.
 
 # Quick start #
-1. Create some borg repos
+1. Create some Borg repositories
 
-    cd ~/backup
-	mkdir sysconf packages
-	borg -e repokey sysconf
-	borg -e repokey packages
+```cd ~/backup
+mkdir sysconf packages
+borg -e repokey sysconf
+borg -e repokey packages
+```
 
 2. Edit config file
 
@@ -26,4 +27,4 @@ It'd be better if [`--files-from`](https://github.com/borgbackup/borg/issues/841
 Please see https://github.com/borgbackup/community#user-content-backup-scripts--borg-wrappers
 
 # Disclaimer #
-THIS SOFTWARE IS PROVIDED "AS-IS", USE IT AT YOUR OWN RISK. IN NO CASES SHALL I BE RESPONSIBLE FOR ANY DIRECT OR INDIRECT DAMAGE CAUSED BY USING THE SOFTWARE, INCLUDING BUT NOT LIMITED TO INCOMPLETE BACKUP AND LOSS OF DATA.
+THIS SOFTWARE IS PROVIDED "AS-IS", USE IT AT YOUR OWN RISK. IN NO CASES SHALL I BE RESPONSIBLE FOR ANY DIRECT OR INDIRECT DAMAGE CAUSED BY USING THE SOFTWARE, INCLUDING BUT NOT LIMITED TO INCOMPLETE BACKUP OR LOSS OF DATA.
