@@ -1,0 +1,36 @@
+#!/bin/bash
+export progdir="`dirname "$0"`"
+
+declare -A file_repos
+source "$progdir/config"
+
+if [[ -n "$1" ]];then
+    repo_dir="$1"
+elif [[ -z "$repo_dir" ]];then
+    echo Please specify a backup repo
+    exit 1
+fi
+
+if [[ -z "$BORG_PASSPHARSE" ]];then
+    read -p Passphrase: -s BORG_PASSPHRASE
+    export BORG_PASSPHRASE
+fi
+
+for i in "${normal_repos[@]}";do
+    export BORG_REPO="$repo_dir/$i"
+    (
+	declare -n paths="paths_$i"
+	for j in "${paths[@]}";do
+	    "$progdir/$j"
+	done
+    ) | xargs -d '\n' borg create ::"$archive_name"
+    eval "$prune_cmd"
+done
+
+for i in "${!file_repos[@]}";do
+    export BORG_REPO="$repo_dir/$i"
+    "$progdir/${file_repos[$i]}" | borg create ::"$archive_name" -
+    eval "$prune_cmd"
+done
+
+

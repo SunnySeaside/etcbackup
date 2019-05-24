@@ -1,0 +1,4 @@
+#!/bin/bash
+find /etc -wholename /etc/ca-certificates/extracted -prune -or -type f -and -not -name '*~' -print0 | while read -d '' file;do
+    pacman -Qqo "$file" > /dev/null 2>&1 || echo "$file"
+done

@@ -1,0 +1,17 @@
+#Default base directory of borg repositories. Optional.
+repo_dir=
+
+#Normal repositories backup a list of files generated with command.
+normal_repos=(sysconf)
+#Commands to generate file list of "sysconf" repository
+paths_sysconf=(archlinux/pacbackup archlinux/notowned custom.paths)
+
+#Single-file repositories backup arbitrary data generated with command.
+file_repos[packages]=archlinux/packages #Command to generate data for "packages" repository
+file_repos[aur]=archlinux/aur
+
+#Format of backup archive name. See Borg documentation for details.
+archive_name='{now:%Y-%m-%d}'
+
+#Command to purge old backups
+prune_cmd="borg prune --keep-weekly=3"
