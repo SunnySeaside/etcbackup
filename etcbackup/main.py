@@ -8,7 +8,6 @@ import argparse
 from collections import ChainMap
 from importlib import import_module
 from etcbackup.config import *
-#TODO: autoprune in conf
 #TODO:
 #--dump: print list to be backed up
 #--prune:manually prune
@@ -70,4 +69,5 @@ for reponame,repoopts in config["repos"].items():
     else:
         print('Error: unknown repository type "',repotype,'"')
 
-    backend.purge(**modargs)
+    if opts.get("auto-prune"):
+        backend.prune(**modargs)

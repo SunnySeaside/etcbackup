@@ -31,5 +31,9 @@ class RawDataBackup:
         self.fileobj.close()
         self._proc.wait()
 
-def purge(**args):
-    pass        #TODO
+def prune(repodir,passphrase,opts):
+    args=["prune"]
+    for i,j in opts["prune-keep"].items():
+        args+=["--keep-"+i,str(j)]
+    proc=_borg_popen(repodir,passphrase,args)
+    proc.wait()

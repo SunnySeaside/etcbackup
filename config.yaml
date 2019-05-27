@@ -9,8 +9,13 @@ global:
     #Patterns to exclude when making backups. Passed to Borg as-is.
     exclude-patterns: ["*~","pp:/etc/ca-certificates/extracted","pp:/etc/ssl/certs"]
 
-    #Command to purge old backups
-    prune-cmd: "borg prune --keep-weekly=3"
+    #Prune automatically when doing backups
+    auto-prune: true
+
+    prune-keep:
+        daily: 5
+        weekly: 4
+        monthly: 6
 
 #There are two kinds of repositories. Normal repositories back up a list of files, while data repositories back up raw data generated with module. Repository type is automatically deduced from the modules specified.
 repos:
