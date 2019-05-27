@@ -1,6 +1,7 @@
 import os
 import subprocess
 import locale
+from etcbackup.config import get_yaml_list
 
 def _borg_popen(repodir,passphrase,args,**popenkw):
     os.putenv("BORG_REPO",repodir) #I think it's safer than using repodir::archvie, because repodir can contain special characters
@@ -13,7 +14,13 @@ def _borg_popen(repodir,passphrase,args,**popenkw):
     return proc
 
 def backup_files(paths,repodir,passphrase,opts):
-    proc=_borg_popen(repodir,passphrase,["create","::"+opts["archive_name"]]+paths)     #TODO: argument length limits
+    #TODO: subject to argument length limits; better using --exclude-from and --patterns-from
+    args=["create"]
+    for i in get_yaml_list(opts,"exclude_patterns"):
+        args+=["-e",i]
+    args.append("::"+opts["archive_name"])
+    args+=paths
+    proc=_borg_popen(repodir,passphrase,args)
     proc.wait()
 
 class RawDataBackup:

@@ -6,6 +6,9 @@ global:
     #Format of backup archive name. See Borg documentation for details.
     archive_name: "{now:%Y-%m-%d}"
 
+    #Patterns to exclude when making backups. Passed to Borg as-is.
+    exclude_patterns: ["*~","pp:/etc/ca-certificates/extracted","pp:/etc/ssl/certs"]
+
     #Command to purge old backups
     prune_cmd: "borg prune --keep-weekly=3"
 
