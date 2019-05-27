@@ -12,16 +12,17 @@ def _borg_popen(repodir,passphrase,args,**popenkw):
     os.close(pass_w)
     return proc
 
-def backup_files(repodir,passphrase,opts,paths):
+def backup_files(paths,repodir,passphrase,opts):
     proc=_borg_popen(repodir,passphrase,["create","::"+opts["archive_name"]]+paths)     #TODO: argument length limits
     proc.wait()
 
-class BackupRawData:
+class RawDataBackup:
     def __init__(self,repodir,passphrase,opts):
         self._proc=_borg_popen(repodir,passphrase,["create","::"+opts["archive_name"],"-"],stdin=subprocess.PIPE)
         self.fileobj=self._proc.stdin
     def end(self):
         self.fileobj.close()
         self._proc.wait()
-def purge(*args):
+
+def purge(**args):
     pass        #TODO
