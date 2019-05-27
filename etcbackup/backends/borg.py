@@ -16,16 +16,16 @@ def _borg_popen(repodir,passphrase,args,**popenkw):
 def backup_files(paths,repodir,passphrase,opts):
     #TODO: subject to argument length limits; better using --exclude-from and --patterns-from
     args=["create"]
-    for i in get_yaml_list(opts,"exclude_patterns"):
+    for i in get_yaml_list(opts,"exclude-patterns"):
         args+=["-e",i]
-    args.append("::"+opts["archive_name"])
+    args.append("::"+opts["archive-name"])
     args+=paths
     proc=_borg_popen(repodir,passphrase,args)
     proc.wait()
 
 class RawDataBackup:
     def __init__(self,repodir,passphrase,opts):
-        self._proc=_borg_popen(repodir,passphrase,["create","::"+opts["archive_name"],"-"],stdin=subprocess.PIPE)
+        self._proc=_borg_popen(repodir,passphrase,["create","::"+opts["archive-name"],"-"],stdin=subprocess.PIPE)
         self.fileobj=self._proc.stdin
     def end(self):
         self.fileobj.close()

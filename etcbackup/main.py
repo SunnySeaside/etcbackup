@@ -25,14 +25,14 @@ config=load_config(args.config)
 
 globalopts=config["global"]
 
-repo_base_dir=args.repo_dir or globalopts.get("repo_dir")
+repo_base_dir=args.repo_dir or globalopts.get("repo-dir")
 
 passphrase=os.getenv("BORG_PASSPHRASE")
 if passphrase is None:
     passphrase=getpass.getpass("Passphrase:")
 
 for reponame,repoopts in config["repos"].items():
-    repodir=repoopts.get("repo_dir")
+    repodir=repoopts.get("repo-dir")
     if repodir is None:
         repodir=reponame
     if not os.path.isabs(repodir): #TODO: does not recognise remote paths
@@ -51,19 +51,19 @@ for reponame,repoopts in config["repos"].items():
             repotype=mod.repotype
         elif repotype!=mod.repotype:
             sys.exit('Error: modules of repository "'+reponame+'" have more than one repository types')
-    if repotype is None: #support repos with only custom_paths
+    if repotype is None: #support repos with only custom-paths
         repotype="normal"
 
     if repotype=="normal":
         paths=set().union(*[m.get_paths() for m in mods])
-        paths.update(get_yaml_list(opts,"custom_paths"))
+        paths.update(get_yaml_list(opts,"custom-paths"))
         #TODO exclude paths
         backend.backup_files(paths,**modargs)
     elif repotype=="data":
         databackup=backend.RawDataBackup(**modargs)
         for mod in mods:
             mod.write_data(databackup.fileobj)
-        for fn in get_yaml_list(opts,"custom_paths"):
+        for fn in get_yaml_list(opts,"custom-paths"):
             with open(fn,"rb") as f:
                 shutil.copyfileobj(f, databackup.fileobj)
         databackup.end()

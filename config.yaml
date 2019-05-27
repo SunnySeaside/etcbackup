@@ -1,28 +1,28 @@
 #All options listed in the global section may be specified either globally or per repository
 global:
     #When specified globally, this is the default base directory containing all Borg repositories. Optional, but must be specified on the command line when there are repositories not using absolute path.
-    repo_dir: null
+    repo-dir: null
 
     #Format of backup archive name. See Borg documentation for details.
-    archive_name: "{now:%Y-%m-%d}"
+    archive-name: "{now:%Y-%m-%d}"
 
     #Patterns to exclude when making backups. Passed to Borg as-is.
-    exclude_patterns: ["*~","pp:/etc/ca-certificates/extracted","pp:/etc/ssl/certs"]
+    exclude-patterns: ["*~","pp:/etc/ca-certificates/extracted","pp:/etc/ssl/certs"]
 
     #Command to purge old backups
-    prune_cmd: "borg prune --keep-weekly=3"
+    prune-cmd: "borg prune --keep-weekly=3"
 
 #There are two kinds of repositories. Normal repositories back up a list of files, while data repositories back up raw data generated with module. Repository type is automatically deduced from the modules specified.
 repos:
     sysconf:
-        #When specified on a single repository, this is the absolute or relative path(relative to global repo_dir). Defaults to a relative path equal to repository name.
-        #repo_dir: /mnt/backup/
+        #When specified on a single repository, this is the absolute or relative path(relative to global repo-dir). Defaults to a relative path equal to repository name.
+        #repo-dir: /mnt/backup/
 
         #Modules to generate lists of files or some raw data to be backed up.
         modules: [archlinux.pacbackup, archlinux.notowned]
 
         #List of custom paths to back up. For data repositories, this is a list of files whose data are appended to the output of modules.
-        custom_paths: [/home,/usr/local,/opt]
+        custom-paths: [/home,/usr/local,/opt]
     packages:
         modules: [archlinux.packages]
     aur:
