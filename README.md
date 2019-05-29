@@ -2,9 +2,17 @@
 This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([Github](https://github.com/borgbackup/borg/)) backup utility. Unlike many other Borg wrappers, it allows you to dynamically generate list of files or some raw data to be backed up by using plugin modules. It also supports backing up to multiple repositories with one single command.
 
 # Quick start #
-1. Install dependencies
 
-   To use this software, you must have Borg and Python 3 installed, along with Python modules "appdirs", "pyyaml" and "pyalpm". Pyalpm is only required if you want to use the bundled plugins for backing up Arch Linux system. It is recommended to use the latest version of Python, as older versions may not work.
+1. Installation
+	If you are using Arch Linux, a PKGBUILD file is provided (currently **not** in AUR), simply download it into a temporary directory and run `makepkg`. Otherwise, the recommended way to install is by using `pip`. To do this, you must have Python 3 installed(preferably the latest version), then run one of the following commands:
+	* `pip install --user git+https://github.com/SunnySeaside/etcbackup`
+
+This will download and install etcbackup with all required dependencies into the current user's home directory automatically.
+	* `pip install git+https://github.com/SunnySeaside/etcbackup`
+
+Like the above, but install system-wide. Root permission required.
+
+Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
 
 2. Create some Borg repositories
 
@@ -16,9 +24,9 @@ borg -e repokey packages
 
 3. Edit config file
 
-   The configuration file is written in YAML, and usually stored in ~/.config/etcbackup/config.yaml. Its syntax is very simple and intuitive. The sample configuration can be used to make a not-so-complete backup of Arch Linux system configuration. It finds modified [package backup files](https://wiki.archlinux.org/index.php/Pacman/Pacnew_and_Pacsave#Package_backup_files)(which are usually user-modifible configuration files) and files in /etc not owned by any package to be backed up into "sysconf" repository, and also backs up a list of installed packages into "packages" repository.
+   The configuration file is written in YAML, and usually needs to be stored in ~/.config/etcbackup/config.yaml. Its syntax is very simple and intuitive. The sample configuration can be used to make a not-so-complete backup of Arch Linux system configuration. It finds modified [package backup files](https://wiki.archlinux.org/index.php/Pacman/Pacnew_and_Pacsave#Package_backup_files)(which are usually user-modifible configuration files) and files in /etc not owned by any package to be backed up into "sysconf" repository, and also backs up a list of installed packages into "packages" repository.
 
-4. Include this Git repository in PYTHONDIR, and run `python etcbackup/main.py ~/backup`
+4. Run `etcbackup ~/backup`.
 
 # Similar projects #
 Please see https://github.com/borgbackup/community#user-content-backup-scripts--borg-wrappers
