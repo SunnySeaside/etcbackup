@@ -1,5 +1,5 @@
 # Summary #
-This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([Github](https://github.com/borgbackup/borg/)) backup utility. Unlike many other Borg wrappers, it allows you to dynamically generate list of files or some raw data to be backed up by using plugin modules. It also supports backing up to multiple repositories with one single command.
+This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([Github](https://github.com/borgbackup/borg/)) backup utility. Unlike many other Borg wrappers, it allows you to dynamically generate list of files or some raw data to be backed up using plugin modules. It also supports creating and backing up to multiple repositories with one single command.
 
 # Quick start #
 
@@ -8,12 +8,10 @@ This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([
    If you are using Arch Linux, a PKGBUILD file is provided (currently **not** in AUR), simply download it into a temporary directory and run `makepkg`. Otherwise, the recommended way to install is by using `pip`. To do this, you must have Python 3 installed(preferably the latest version), then run one of the following commands:
    * `pip install --user git+https://github.com/SunnySeaside/etcbackup`
    
-     This will download and install etcbackup with all required dependencies into the current user's home directory automatically.
+     This will download and install etcbackup along with all required dependencies into your home directory automatically. Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
    * `pip install git+https://github.com/SunnySeaside/etcbackup`
    
      Like the above, but install system-wide. Root permission required.
-
-   Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
 
 2. Edit config file
 
