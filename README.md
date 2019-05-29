@@ -4,32 +4,33 @@ This is a simple command-line front-end of [Borg](https://www.borgbackup.org/)([
 # Quick start #
 
 1. Installation
-	If you are using Arch Linux, a PKGBUILD file is provided (currently **not** in AUR), simply download it into a temporary directory and run `makepkg`. Otherwise, the recommended way to install is by using `pip`. To do this, you must have Python 3 installed(preferably the latest version), then run one of the following commands:
-	* `pip install --user git+https://github.com/SunnySeaside/etcbackup`
 
-This will download and install etcbackup with all required dependencies into the current user's home directory automatically.
-	* `pip install git+https://github.com/SunnySeaside/etcbackup`
+   If you are using Arch Linux, a PKGBUILD file is provided (currently **not** in AUR), simply download it into a temporary directory and run `makepkg`. Otherwise, the recommended way to install is by using `pip`. To do this, you must have Python 3 installed(preferably the latest version), then run one of the following commands:
+   * `pip install --user git+https://github.com/SunnySeaside/etcbackup`
+   
+     This will download and install etcbackup with all required dependencies into the current user's home directory automatically.
+   * `pip install git+https://github.com/SunnySeaside/etcbackup`
+   
+     Like the above, but install system-wide. Root permission required.
 
-Like the above, but install system-wide. Root permission required.
-
-Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
+   Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
 
 2. Edit config file
 
    The configuration file is written in YAML, and usually needs to be stored in ~/.config/etcbackup/config.yaml. Its syntax is very simple and intuitive. The sample configuration can be used to make a not-so-complete backup of Arch Linux system configuration. It finds modified [package backup files](https://wiki.archlinux.org/index.php/Pacman/Pacnew_and_Pacsave#Package_backup_files)(which are usually user-modifible configuration files) and files in /etc not owned by any package to be backed up into "sysconf" repository, and also backs up a list of installed packages into "packages" repository.
 
-2. Create some Borg repositories
+3. Create some Borg repositories
 
-```mkdir ~/backup
-etcbackup -c '-e repokey' ~/backup
-```
+   ```mkdir ~/backup
+   etcbackup -c '-e repokey' ~/backup
+   ```
 
-Or you could create them manually:
-```cd ~/backup
-mkdir sysconf packages
-borg -e repokey sysconf
-borg -e repokey packages
-```
+   Or you could create them manually:
+   ```cd ~/backup
+   mkdir sysconf packages
+   borg -e repokey sysconf
+   borg -e repokey packages
+   ```
 
 4. Run `etcbackup ~/backup`.
 
