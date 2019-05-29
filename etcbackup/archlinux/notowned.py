@@ -7,7 +7,8 @@ def get_paths():
     owned=set()
     for p in localdb.pkgcache:
         for path,size,mod in p.files:
-            owned.add(os.path.join("/",path))
+            if path.startswith("etc") or path.startswith("/etc"):
+                owned.add(os.path.join("/",path))
     #print(owned)
     paths=[]
     for dirpath,dirnames,filenames in os.walk("/etc"):
