@@ -14,17 +14,22 @@ Like the above, but install system-wide. Root permission required.
 
 Note that you should have `~/.local/bin` in your $PATH, in order to run etcbackup conveniently.
 
+2. Edit config file
+
+   The configuration file is written in YAML, and usually needs to be stored in ~/.config/etcbackup/config.yaml. Its syntax is very simple and intuitive. The sample configuration can be used to make a not-so-complete backup of Arch Linux system configuration. It finds modified [package backup files](https://wiki.archlinux.org/index.php/Pacman/Pacnew_and_Pacsave#Package_backup_files)(which are usually user-modifible configuration files) and files in /etc not owned by any package to be backed up into "sysconf" repository, and also backs up a list of installed packages into "packages" repository.
+
 2. Create some Borg repositories
 
+```mkdir ~/backup
+etcbackup -c '-e repokey' ~/backup
+```
+
+Or you could create them manually:
 ```cd ~/backup
 mkdir sysconf packages
 borg -e repokey sysconf
 borg -e repokey packages
 ```
-
-3. Edit config file
-
-   The configuration file is written in YAML, and usually needs to be stored in ~/.config/etcbackup/config.yaml. Its syntax is very simple and intuitive. The sample configuration can be used to make a not-so-complete backup of Arch Linux system configuration. It finds modified [package backup files](https://wiki.archlinux.org/index.php/Pacman/Pacnew_and_Pacsave#Package_backup_files)(which are usually user-modifible configuration files) and files in /etc not owned by any package to be backed up into "sysconf" repository, and also backs up a list of installed packages into "packages" repository.
 
 4. Run `etcbackup ~/backup`.
 

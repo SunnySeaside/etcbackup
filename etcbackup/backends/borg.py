@@ -13,6 +13,11 @@ def _borg_popen(repodir,passphrase,args,**popenkw):
     os.close(pass_w)
     return proc
 
+def create_repository(createargs,repodir,passphrase,opts):
+    os.putenv("BORG_DISPLAY_PASSPHRASE","n") #todo: make it customizable
+    proc=_borg_popen(repodir,passphrase,["init"]+createargs.split(' ')) #todo workaround
+    proc.wait()
+
 def backup_files(paths,repodir,passphrase,opts):
     #TODO: subject to argument length limits; better using --exclude-from and --patterns-from
     args=["create"]

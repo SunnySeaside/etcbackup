@@ -11,15 +11,18 @@ from etcbackup.config import *
 def main():
     #TODO:
     #--dump: print list to be backed up
-    #--prune:manually prune
-    #dryrun
-    #-c: create
-    #add_mutually_exclusive_group
     parser=argparse.ArgumentParser(description="Borg wrapper that generates paths to be backed up dynamically")
     parser.add_argument("repo_dir",help="base directory for Borg repositories with no absolute path configured",nargs="?")
     parser.add_argument("-C","--config",help="path of configuration file")
-    #parser.add_argument("--dry-run",help="do not actually perform backup",action="store_true")
+    #parser.add_argument("-n","--dry-run",help="do not actually perform backup",action="store_true")
+    #parser.add_argument("-v","--verbose",help="produce more output",action="store_true")
+    group=parser.add_argument_group("actions") #add_mutually_exclusive_group
+    group.add_argument("-b","--backup",help="peform backup (default when no actions given)",action="store_true")
+    group.add_argument("-c","--create",metavar="CREATEOPTS",help="create configured repositories",action="store")
+    group.add_argument("-p","--prune",help="remove old backup archives",action="store_true")
     args=parser.parse_args()
+    if not (args.backup or args.create or args.prune):
+        args.backup=True
 
     config=load_config(args.config)
 
@@ -53,26 +56,28 @@ def main():
                 sys.exit('Error: modules of repository "'+reponame+'" have more than one repository types')
         if repotype is None: #support repos with only custom-paths
             repotype="normal"
+        if args.create:
+            backend.create_repository(args.create,**modargs)
+        if args.backup:
+            if repotype=="normal":
+                paths=set().union(*[m.get_paths() for m in mods])
+                paths.update(get_yaml_list(opts,"custom-paths"))
+                #TODO exclude paths
+                backend.backup_files(paths,**modargs)
+            elif repotype=="data":
+                databackup=backend.RawDataBackup(**modargs)
+                for mod in mods:
+                    mod.write_data(databackup.fileobj)
+                for fn in get_yaml_list(opts,"custom-paths"):
+                    with open(fn,"rb") as f:
+                        shutil.copyfileobj(f, databackup.fileobj)
+                databackup.end()
+            else:
+                print('Error: unknown repository type "',repotype,'"')
 
-        if repotype=="normal":
-            paths=set().union(*[m.get_paths() for m in mods])
-            paths.update(get_yaml_list(opts,"custom-paths"))
-            #TODO exclude paths
-            backend.backup_files(paths,**modargs)
-        elif repotype=="data":
-            databackup=backend.RawDataBackup(**modargs)
-            for mod in mods:
-                mod.write_data(databackup.fileobj)
-            for fn in get_yaml_list(opts,"custom-paths"):
-                with open(fn,"rb") as f:
-                    shutil.copyfileobj(f, databackup.fileobj)
-            databackup.end()
-        else:
-            print('Error: unknown repository type "',repotype,'"')
-
-        if opts.get("auto-prune"):
+        if args.prune or (args.backup and opts.get("auto-prune")):
             backend.prune(**modargs)
+
 
 if __name__ == "__main__":
     main()
-
