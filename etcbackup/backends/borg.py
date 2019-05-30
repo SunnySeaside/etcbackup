@@ -11,6 +11,7 @@ def _borg_popen(repodir,passphrase,args,**popenkw):
     proc=subprocess.Popen(["borg"]+args,close_fds=False,**popenkw)
     os.write(pass_w,passphrase.encode(locale.getpreferredencoding(False)))
     os.close(pass_w)
+    os.close(pass_r)
     return proc
 
 def create_repository(createargs,repodir,passphrase,opts):
