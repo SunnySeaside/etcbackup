@@ -14,6 +14,7 @@ def main():
     parser=argparse.ArgumentParser(description="Borg wrapper that generates paths to be backed up dynamically")
     parser.add_argument("repo_dir",help="base directory for Borg repositories with no absolute path configured",nargs="?")
     parser.add_argument("-C","--config",help="path of configuration file")
+    parser.add_argument("-r","--repo",help="only operate on specified repositories",nargs="*")
     #parser.add_argument("-n","--dry-run",help="do not actually perform backup",action="store_true")
     #parser.add_argument("-v","--verbose",help="produce more output",action="store_true")
     group=parser.add_argument_group("actions") #add_mutually_exclusive_group
@@ -34,7 +35,18 @@ def main():
     if passphrase is None:
         passphrase=getpass.getpass("Passphrase:")
 
-    for reponame,repoopts in config["repos"].items():
+    if args.repo is None:
+        args.repo=config["repos"].keys()
+        no_disable=False
+    else:
+        no_disable=True
+    for reponame in args.repo:
+        try:
+            repoopts=config["repos"][reponame]
+        except KeyError:
+            sys.exit('Error: repository "'+reponame+'" not configured')
+        if repoopts.get("disabled") and not no_disable:
+            continue
         repodir=repoopts.get("repo-dir")
         if repodir is None:
             repodir=reponame

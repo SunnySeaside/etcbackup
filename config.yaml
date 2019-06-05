@@ -26,6 +26,9 @@ repos:
         #When specified on a single repository, this is the absolute or relative path(relative to global repo-dir). Defaults to a relative path equal to repository name.
         #repo-dir: /mnt/backup/
 
+        #Disabled repositories will not be used unless manually specified on the command line
+        #disabled: True
+
         #Modules to generate lists of files or some raw data to be backed up. Some (but not all) modules accept an argument.
         modules:
             - archlinux.pacbackup
