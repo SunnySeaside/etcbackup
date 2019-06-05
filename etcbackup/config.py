@@ -20,11 +20,13 @@ def load_config(path=None):
     return config
 
 
-def get_yaml_list(obj,name):
+def get_yaml_list(obj,name,allow_dict=False):
     data=obj.get(name)
     if type(data) is list:
         return data
     elif type(data) is str:
+        return [data]
+    elif allow_dict and type(data) is dict:
         return [data]
     elif data is None:
         return []

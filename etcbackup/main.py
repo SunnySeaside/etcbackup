@@ -45,38 +45,38 @@ def main():
                 repodir=os.path.join(repo_base_dir,repodir)
 
         opts=ChainMap(repoopts,globalopts)
-        modargs={"repodir":repodir,"passphrase":passphrase,"opts":opts}
+        be_args={"repodir":repodir,"passphrase":passphrase,"opts":opts}
 
-        mods=[import_module("etcbackup."+i) for i in get_yaml_list(opts,"modules")]
+        mods=[[(i,None)] if type(i) is str else i.items()
+                for i in get_yaml_list(opts,"modules",True)]
+        mods=[(import_module("etcbackup.modules."+j[0]),j[1])
+                for i in mods for j in i]
+
         repotype=None
-        for mod in mods:
+        for mod,modarg in mods:
             if repotype is None:
                 repotype=mod.repotype
             elif repotype!=mod.repotype:
                 sys.exit('Error: modules of repository "'+reponame+'" have more than one repository types')
-        if repotype is None: #support repos with only custom-paths
-            repotype="normal"
+        if repotype is None:
+            sys.exit('Error: no modules specified for repository "'+reponame+'"')
         if args.create:
-            backend.create_repository(args.create,**modargs)
+            backend.create_repository(args.create,**be_args)
         if args.backup:
             if repotype=="normal":
-                paths=set().union(*[m.get_paths() for m in mods])
-                paths.update(get_yaml_list(opts,"custom-paths"))
+                paths=set().union(*[m.get_paths(marg) for m,marg in mods])
                 #TODO exclude paths
-                backend.backup_files(paths,**modargs)
+                backend.backup_files(paths,**be_args)
             elif repotype=="data":
-                databackup=backend.RawDataBackup(**modargs)
-                for mod in mods:
-                    mod.write_data(databackup.fileobj)
-                for fn in get_yaml_list(opts,"custom-paths"):
-                    with open(fn,"rb") as f:
-                        shutil.copyfileobj(f, databackup.fileobj)
+                databackup=backend.RawDataBackup(**be_args)
+                for mod,modarg in mods:
+                    mod.write_data(databackup.fileobj,modarg)
                 databackup.end()
             else:
                 print('Error: unknown repository type "',repotype,'"')
 
         if args.prune or (args.backup and opts.get("auto-prune")):
-            backend.prune(**modargs)
+            backend.prune(**be_args)
 
 
 if __name__ == "__main__":

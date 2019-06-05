@@ -1,17 +1,23 @@
-from etcbackup.archlinux.common import *
+from etcbackup.modules.archlinux.common import *
 import os
 
 repotype="normal"
-def get_paths():
+def get_paths(modarg=None):
+    if modarg is None:
+        etc="etc"
+        etc2="/etc"
+    else:
+        etc2=os.path.abspath(modarg)
+        etc=os.path.relpath(etc2,"/")
     #owned=set().union(*[(f[0] for f in p.files) for p in localdb.pkgcache])
     owned=set()
     for p in localdb.pkgcache:
         for path,size,mod in p.files:
-            if path.startswith("etc") or path.startswith("/etc"):
+            if path.startswith(etc) or path.startswith(etc2):
                 owned.add(os.path.join("/",path))
     #print(owned)
     paths=[]
-    for dirpath,dirnames,filenames in os.walk("/etc"):
+    for dirpath,dirnames,filenames in os.walk(etc2):
         for filename in filenames:
             path=os.path.join(dirpath,filename)
             if path not in owned:
@@ -19,5 +25,6 @@ def get_paths():
     return paths
 
 if __name__ == "__main__":
-    print("\n".join(get_paths()))
+    import sys
+    print("\n".join(get_paths(sys.argv[1] if len(sys.argv)>1 else None)))
 

@@ -1,9 +1,9 @@
-from etcbackup.archlinux.common import *
+from etcbackup.modules.archlinux.common import *
 import hashlib
 import os.path
 
 repotype="normal"
-def get_paths():
+def get_paths(modarg=None):
     paths=[]
     for pkg in localdb.pkgcache:
         for oname,omd5 in pkg.backup:

@@ -2,7 +2,7 @@
 import sys
 import subprocess
 repotype="data"
-def write_data(outfile):
+def write_data(outfile,modarg=None):
     subprocess.run(["pacman","-Qqen"],stdout=outfile)
 
 if __name__ == "__main__":
