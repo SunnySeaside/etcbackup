@@ -9,13 +9,10 @@ def get_paths(modarg=None):
     else:
         etc2=os.path.abspath(modarg)
         etc=os.path.relpath(etc2,"/")
-    #owned=set().union(*[(f[0] for f in p.files) for p in localdb.pkgcache])
-    owned=set()
-    for p in localdb.pkgcache:
-        for path,size,mod in p.files:
-            if path.startswith(etc) or path.startswith(etc2):
-                owned.add(os.path.join("/",path))
-    #print(owned)
+
+    owned={path for p in localdb.pkgcache for path,size,mod in p.files
+                                             if path.startswith(etc) or path.startswith(etc2)}
+
     paths=[]
     for dirpath,dirnames,filenames in os.walk(etc2):
         for filename in filenames:
