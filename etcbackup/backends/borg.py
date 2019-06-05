@@ -1,6 +1,7 @@
 import os
 import subprocess
 import locale
+import tempfile
 from etcbackup.config import get_yaml_list
 
 def _borg_popen(repodir,passphrase,args,**popenkw):
@@ -20,14 +21,29 @@ def create_repository(createargs,repodir,passphrase,opts):
     proc.wait()
 
 def backup_files(paths,repodir,passphrase,opts):
-    #TODO: subject to argument length limits; better using --exclude-from and --patterns-from
     args=["create"]
-    for i in get_yaml_list(opts,"exclude-patterns"):
-        args+=["-e",i]
-    args.append("::"+opts["archive-name"])
-    args+=paths
+    if opts.get("use-patterns-file"): #use --patterns-from(experimental for Borg)
+        pf=tempfile.NamedTemporaryFile("w",delete=False) #not all OSs support opening the same file two times
+        pf.write("P fm\n")
+        for i in get_yaml_list(opts,"exclude-patterns"):
+            pf.write("-"+i+"\n")
+        for i in paths:
+            pf.write("R "+i+"\n")
+        pf.close()
+
+        args+=["--patterns-from",pf.name,"::"+opts["archive-name"]]
+    else:    #subject to argument length limits; better using --patterns-from or --exclude-from
+        pf=None
+        for i in get_yaml_list(opts,"exclude-patterns"):
+            args+=["-e",i]
+        args.append("::"+opts["archive-name"])
+        args+=paths
+
     proc=_borg_popen(repodir,passphrase,args)
     proc.wait()
+
+    if pf is not None:
+        os.unlink(pf.name)
 
 class RawDataBackup:
     def __init__(self,repodir,passphrase,opts):

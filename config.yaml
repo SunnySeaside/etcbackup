@@ -9,6 +9,9 @@ global:
     #Patterns to exclude when making backups. Passed to Borg as-is.
     exclude-patterns: ["*~","pp:/etc/ca-certificates/extracted","pp:/etc/ssl/certs"]
 
+    #Use the experimental "--patterns-from" option of Borg, to avoid argument list length limitations
+    use-patterns-file: true
+
     #Prune automatically when doing backups
     auto-prune: true
 
