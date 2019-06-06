@@ -2,7 +2,6 @@
 import appdirs
 import os.path
 import yaml
-
 try:
     from yaml import CSafeLoader as SafeLoader
 except ImportError:
@@ -18,7 +17,6 @@ def load_config(path=None):
     config=yaml.load(file,Loader=SafeLoader)
     file.close()
     return config
-
 
 def get_yaml_list(obj,name,allow_dict=False):
     data=obj.get(name)

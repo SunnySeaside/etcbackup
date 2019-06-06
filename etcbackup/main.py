@@ -15,10 +15,10 @@ def main():
     parser.add_argument("repo_dir",help="base directory for Borg repositories with no absolute path configured",nargs="?")
     parser.add_argument("-C","--config",help="path of configuration file")
     parser.add_argument("-r","--repo",help="only operate on specified repositories",nargs="*")
-    #parser.add_argument("-n","--dry-run",help="do not actually perform backup",action="store_true")
-    #parser.add_argument("-v","--verbose",help="produce more output",action="store_true")
+    #parser.add_argument("-n","--dry-run",help="do not actually perform actions",action="store_true")
+    #parser.add_argument("-v","--verbose",help="produce more messages",action="store_true")
     group=parser.add_argument_group("actions") #add_mutually_exclusive_group
-    group.add_argument("-b","--backup",help="peform backup (default when no actions given)",action="store_true")
+    group.add_argument("-b","--backup",help="perform backup (default when no actions given)",action="store_true")
     group.add_argument("-c","--create",metavar="CREATEOPTS",help="create configured repositories",action="store")
     group.add_argument("-p","--prune",help="remove old backup archives",action="store_true")
     args=parser.parse_args()
@@ -61,8 +61,8 @@ def main():
 
         mods=[[(i,None)] if type(i) is str else i.items()
                 for i in get_yaml_list(opts,"modules",True)]
-        mods=[(import_module("etcbackup.modules."+j[0]),j[1])
-                for i in mods for j in i]
+        mods=[(import_module("etcbackup.modules."+modname),modarg)
+                for i in mods for modname,modarg in i]
 
         repotype=None
         for mod,modarg in mods:
